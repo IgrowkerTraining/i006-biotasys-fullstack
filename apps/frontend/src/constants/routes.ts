@@ -1,3 +1,7 @@
+const apiBaseUrl = (
+  import.meta.env.VITE_API_URL || 'http://localhost:3000'
+).replace(/\/+$/, '');
+
 export const ROUTES = {
   LOGIN: '/login',
   REGISTER: '/register',
@@ -6,7 +10,7 @@ export const ROUTES = {
 } as const;
 
 export const API_ENDPOINTS = {
-  BASE: 'http://localhost:3000',
+  BASE: apiBaseUrl,
   AUTH: {
     LOGIN: '/auth/login',
     LOGOUT: "/auth/logout",
