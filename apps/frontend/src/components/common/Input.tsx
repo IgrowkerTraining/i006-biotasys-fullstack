@@ -16,21 +16,21 @@ export const Input: React.FC<InputProps> = ({
   return (
     <div className="flex flex-col gap-1.5 w-full">
       {label && (
-        <label className="text-sm font-medium text-slate-400 ml-1">
+        <label className="text-sm font-medium text-gray-700 ml-1">
           {label}
         </label>
       )}
       <div className="relative group">
         {icon && (
-          <div className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within:text-indigo-400 transition-colors">
+          <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-indigo-400 transition-colors">
             {icon}
           </div>
         )}
         <input
           className={`
-            w-full bg-slate-900/50 border border-slate-700 rounded-lg px-3 py-2.5 
+            w-full bg-white border border-gray-300 rounded-lg px-3 py-2.5 
             ${icon ? "pl-10" : ""} 
-            text-slate-200 placeholder:text-slate-600
+            text-gray-900 placeholder:text-gray-400
             focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500
             transition-all duration-200
             ${error ? "border-red-500 focus:ring-red-500/50 focus:border-red-500" : ""}

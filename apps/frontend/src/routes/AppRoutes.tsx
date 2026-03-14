@@ -14,6 +14,7 @@ import { PasswordReset } from "../pages/login/PasswordReset";
 import { ForgotPassword } from "../pages/login/ForgotPassword";
 import { Navbar } from "../pages/Navbar";
 import RegisterComplete from "../pages/register/RegisterComplete";
+import { User } from "../pages/user/user.tsx"
 
 export const AppRoutes: React.FC = () => {
   return (
@@ -95,6 +96,17 @@ export const AppRoutes: React.FC = () => {
             <Navbar />
             <DashboardLaboratory />
           </ProtectedRoute>
+
+          
+          
+        }
+      />
+
+            <Route
+        path="/profile"
+        element={
+            <><Navbar />
+            <User/></>
         }
       />
     </Routes>
