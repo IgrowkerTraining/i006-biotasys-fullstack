@@ -7,9 +7,10 @@ import {
   ConflictException,
   NotFoundException,
   Logger,
+  InternalServerErrorException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Brackets, Repository, LessThan } from 'typeorm';
+import { Brackets, Repository, LessThan, QueryFailedError } from 'typeorm';
 import bcrypt from 'bcrypt';
 import { randomBytes } from 'crypto';
 import { User } from './entities/user.entity';
@@ -22,6 +23,7 @@ import { LaboratoryOptionDto } from './dto/laboratory-option.dto';
 import { EmailService } from '../../infrastructure/email/services/email.service';
 import config from '../../config/dotenv.config';
 import { Role } from '../../common/enums/role.enum';
+import { Study } from '../studies/entities/study.entity';
 
 @Injectable()
 export class UsersService {
@@ -34,6 +36,8 @@ export class UsersService {
     private readonly userRepository: Repository<User>,
     @InjectRepository(EmailVerificationToken)
     private readonly emailVerificationTokenRepository: Repository<EmailVerificationToken>,
+    @InjectRepository(Study)
+    private readonly studyRepository: Repository<Study>,
     private readonly emailService: EmailService,
   ) {}
 
@@ -405,16 +409,58 @@ export class UsersService {
   }
 
   async remove(id: string): Promise<{ message: string }> {
-    const user = await this.userRepository.findOne({ where: { id } });
+    try {
+      const user = await this.userRepository.findOne({ where: { id } });
 
-    if (!user) {
-      throw new NotFoundException(`Usuario con ID ${id} no encontrado`);
+      if (!user) {
+        throw new NotFoundException(`Usuario con ID ${id} no encontrado`);
+      }
+
+      const linkedStudies = await this.studyRepository
+        .createQueryBuilder('study')
+        .where('study.nutritionistId = :id', { id })
+        .orWhere('study.assigneeUserId = :id', { id })
+        .getCount();
+
+      if (linkedStudies > 0) {
+        this.logger.warn(
+          `No se puede eliminar el usuario ${user.email} porque tiene ${linkedStudies} estudio(s) asociado(s)`,
+        );
+        throw new ConflictException(
+          'No se puede eliminar el usuario porque tiene estudios asociados',
+        );
+      }
+
+      await this.userRepository.remove(user);
+      this.logger.log(`Usuario ${user.email} eliminado`);
+
+      return { message: `Usuario eliminado exitosamente` };
+    } catch (error) {
+      if (
+        error instanceof NotFoundException ||
+        error instanceof ConflictException
+      ) {
+        throw error;
+      }
+
+      if (error instanceof QueryFailedError) {
+        this.logger.error(
+          `Error de base de datos al eliminar el usuario ${id}`,
+          error.message,
+        );
+        throw new ConflictException(
+          'No se puede eliminar el usuario porque tiene datos asociados',
+        );
+      }
+
+      this.logger.error(
+        `Error inesperado al eliminar el usuario ${id}`,
+        error instanceof Error ? error.stack : String(error),
+      );
+      throw new InternalServerErrorException(
+        'Error interno al eliminar el usuario',
+      );
     }
-
-    await this.userRepository.remove(user);
-    this.logger.log(`Usuario ${user.email} eliminado`);
-
-    return { message: `Usuario eliminado exitosamente` };
   }
 
   /**

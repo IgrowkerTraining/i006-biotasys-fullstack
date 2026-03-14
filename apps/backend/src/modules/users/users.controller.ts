@@ -270,6 +270,10 @@ export class UsersController {
     status: 200,
     description: 'Usuario eliminado exitosamente',
   })
+  @ApiResponse({
+    status: 409,
+    description: 'No se puede eliminar el usuario porque tiene estudios asociados',
+  })
   remove(@Param('id') id: string) {
     return this.usersService.remove(id);
   }

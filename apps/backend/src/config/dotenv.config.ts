@@ -109,13 +109,16 @@ const dbLogQueries =
   typeof dbLogQueriesEnv === 'string'
     ? dbLogQueriesEnv === 'true'
     : process.env.NODE_ENV !== 'production';
-const appUrl = process.env.APP_URL || process.env.FRONTEND_URL || 'http://localhost:5173';
+const port = parseInt(process.env.PORT || '3000', 10);
+const backendUrl = `http://localhost:${port}`;
+const appUrl =
+  process.env.APP_URL || process.env.FRONTEND_URL || 'http://localhost:5173';
 const frontendUrl = process.env.FRONTEND_URL || appUrl;
 const corsAllowedOrigins = parseCsv(process.env.CORS_ALLOWED_ORIGINS);
 
 export const config: IConfig = {
   // Server
-  port: parseInt(process.env.PORT || '3000', 10),
+  port,
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   nodeEnv: (process.env.NODE_ENV as any) || 'development',
   appUrl,
@@ -123,7 +126,7 @@ export const config: IConfig = {
   corsAllowedOrigins:
     corsAllowedOrigins.length > 0
       ? corsAllowedOrigins
-      : Array.from(new Set([frontendUrl, appUrl].filter(Boolean))),
+      : Array.from(new Set([frontendUrl, appUrl, backendUrl].filter(Boolean))),
 
   // JWT
   jwtSecret: process.env.JWT_SECRET || 'default-secret',
