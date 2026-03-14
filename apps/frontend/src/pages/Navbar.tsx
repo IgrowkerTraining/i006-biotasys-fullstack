@@ -1,6 +1,6 @@
-import { useState, useRef, useEffect } from "react";
-import { useAuth } from "../hooks/useAuth";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../hooks/useAuth";
 import { api } from "../services/api";
 
 export const Navbar = () => {
@@ -15,7 +15,7 @@ export const Navbar = () => {
     try {
       await api.logout({ refreshToken });
     } catch (err) {
-      console.error("Error al cerrar sesión:", err);
+      console.error("Error al cerrar sesion:", err);
     } finally {
       logout();
       navigate("/login");
@@ -28,6 +28,7 @@ export const Navbar = () => {
         setOpen(false);
       }
     };
+
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
@@ -71,15 +72,21 @@ export const Navbar = () => {
                 <p className="text-xs text-gray-500">{user?.email}</p>
               </div>
 
-              <button className="w-full text-left px-3 py-2 text-sm text-black hover:bg-gray-100 rounded-lg flex items-center gap-2">
-                <span>👤</span> Mi perfil
+              <button
+                onClick={() => {
+                  navigate("/profile");
+                  setOpen(false);
+                }}
+                className="w-full text-left px-3 py-2 text-sm text-black hover:bg-gray-100 rounded-lg flex items-center gap-2"
+              >
+                <span>[P]</span> Mi perfil
               </button>
 
               <button
                 onClick={() => setShowLogoutModal(true)}
                 className="w-full text-left px-3 py-2 text-sm text-red-500 hover:bg-red-50 rounded-lg flex items-center gap-2 mt-1"
               >
-                <span>🔓</span> Cerrar sesión
+                <span>[X]</span> Cerrar sesion
               </button>
             </div>
           )}
@@ -89,9 +96,9 @@ export const Navbar = () => {
       {showLogoutModal && (
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
           <div className="bg-white p-6 rounded-xl shadow-xl w-full max-w-sm">
-            <h2 className="text-lg font-semibold text-black mb-2">Cerrar sesión</h2>
+            <h2 className="text-lg font-semibold text-black mb-2">Cerrar sesion</h2>
             <p className="text-gray-600 text-sm mb-6">
-              ¿Seguro que deseas cerrar sesión? Tendrás que volver a introducir tus credenciales.
+              Seguro que deseas cerrar sesion? Tendras que volver a introducir tus credenciales.
             </p>
 
             <div className="flex justify-end gap-3">
@@ -106,7 +113,7 @@ export const Navbar = () => {
                 onClick={handleLogout}
                 className="px-4 py-2 text-sm rounded-lg bg-red-600 text-white hover:bg-red-700"
               >
-                Cerrar sesión
+                Cerrar sesion
               </button>
             </div>
           </div>
@@ -115,4 +122,3 @@ export const Navbar = () => {
     </>
   );
 };
-
