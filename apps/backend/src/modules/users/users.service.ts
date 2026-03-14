@@ -83,12 +83,19 @@ export class UsersService {
       const verificationLink = `${appUrl}/auth/verify-email?token=${verificationToken.token}`;
 
       // Enviar email de verificación
-      await this.emailService.sendEmailVerificationEmail(
-        savedUser.email,
-        savedUser.fullName,
-        verificationLink,
-        this.VERIFICATION_TOKEN_EXPIRY_MINUTES,
-      );
+      void this.emailService
+        .sendEmailVerificationEmail(
+          savedUser.email,
+          savedUser.fullName,
+          verificationLink,
+          this.VERIFICATION_TOKEN_EXPIRY_MINUTES,
+        )
+        .catch((emailError: unknown) => {
+          this.logger.error(
+            `No se pudo enviar el email de verificacion a ${savedUser.email}`,
+            emailError instanceof Error ? emailError.stack : String(emailError),
+          );
+        });
 
       // Retornar DTO sin exponer la contraseña
       const response = {
