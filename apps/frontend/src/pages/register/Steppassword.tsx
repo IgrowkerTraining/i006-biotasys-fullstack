@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect, useMemo } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 
 interface StepPasswordProps {
   email: string;
@@ -44,7 +44,6 @@ const CheckMark = () => (
 );
 
 export const StepPassword: React.FC<StepPasswordProps> = ({
-  email,
   onSubmit,
   onBack,
   isLoading,
@@ -56,7 +55,6 @@ export const StepPassword: React.FC<StepPasswordProps> = ({
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [termsAccepted, setTermsAccepted] = useState(false);
 
-  // Validation
   const validation = useMemo(
     () => ({
       minLength: password.length >= 12,
@@ -100,7 +98,6 @@ export const StepPassword: React.FC<StepPasswordProps> = ({
       {error && <div className="reg-error-banner">{error}</div>}
 
       <form className="step-password__form" onSubmit={handleSubmit} noValidate>
-        {/* Password */}
         <div className="reg-field">
           <label className="reg-field__label reg-field__label--required">
             Contraseña
@@ -127,7 +124,6 @@ export const StepPassword: React.FC<StepPasswordProps> = ({
             </button>
           </div>
 
-          {/* Strength meter */}
           {password.length > 0 && (
             <div className="strength-meter">
               <div className="strength-meter__row">
@@ -141,14 +137,12 @@ export const StepPassword: React.FC<StepPasswordProps> = ({
                   />
                 ))}
                 <span className="strength-meter__text">
-                  Seguridad:{' '}
-                  <strong data-level={strength}>{STRENGTH_LABELS[strength]}</strong>
+                  Seguridad: <strong data-level={strength}>{STRENGTH_LABELS[strength]}</strong>
                 </span>
               </div>
             </div>
           )}
 
-          {/* Validation checklist */}
           <div className="validation-list">
             {([
               { key: 'minLength' as const, label: '12 caracteres' },
@@ -162,18 +156,13 @@ export const StepPassword: React.FC<StepPasswordProps> = ({
                   validation[key] ? 'validation-list__item--pass' : ''
                 }`}
               >
-                {validation[key] ? (
-                  <CheckMark />
-                ) : (
-                  <svg viewBox="0 0 16 16" fill="none" />
-                )}
+                {validation[key] ? <CheckMark /> : <svg viewBox="0 0 16 16" fill="none" />}
                 {label}
               </div>
             ))}
           </div>
         </div>
 
-        {/* Confirm Password */}
         <div className="reg-field">
           <label className="reg-field__label reg-field__label--required">
             Repetir contraseña
@@ -212,7 +201,6 @@ export const StepPassword: React.FC<StepPasswordProps> = ({
           )}
         </div>
 
-        {/* Terms */}
         <div className="reg-terms">
           <input
             className="reg-terms__checkbox"
@@ -234,14 +222,12 @@ export const StepPassword: React.FC<StepPasswordProps> = ({
           </label>
         </div>
 
-        {/* Submit */}
         <button className="reg-btn" type="submit" disabled={!canSubmit}>
           {isLoading && <span className="reg-btn__spinner" />}
           {isLoading ? 'Activando...' : 'Activar y entrar'}
         </button>
       </form>
 
-      {/* Back link */}
       <button
         className="step-password__back"
         onClick={onBack}

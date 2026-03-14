@@ -18,12 +18,9 @@ export const RegisterPage: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
 
-  // Step 1 data
   const [fullName, setFullName] = useState('');
   const [laboratory, setLaboratory] = useState('');
   const [email, setEmail] = useState('');
-
-  // Step 2 data
   const [password, setPassword] = useState('');
 
   const handleStep1Continue = useCallback(() => {
@@ -50,11 +47,10 @@ export const RegisterPage: React.FC = () => {
           laboratory: laboratory.trim() || undefined,
         });
 
-        // Registration successful â†’ show email verification step
         setCurrentStep(3);
       } catch (err: any) {
         const msg =
-          err?.message || 'Ha ocurrido un error al crear tu cuenta. IntÃ©ntalo de nuevo.';
+          err?.message || 'Ha ocurrido un error al crear tu cuenta. Inténtalo de nuevo.';
         setServerError(msg);
       } finally {
         setIsLoading(false);
@@ -65,12 +61,10 @@ export const RegisterPage: React.FC = () => {
 
   const handleResendEmail = useCallback(async () => {
     // TODO: implement resend verification email endpoint
-    // For now this is a placeholder
-  }, [email]);
+  }, []);
 
   return (
     <div className="register-page">
-      {/* Header */}
       <header className="register-header">
         <Link to="/login" className="register-header__logo">
           <svg
@@ -93,7 +87,7 @@ export const RegisterPage: React.FC = () => {
             ?
           </button>
           <button className="register-header__lang-btn" aria-label="Cambiar idioma">
-            EspaÃ±ol
+            Español
             <svg
               className="register-header__lang-chevron"
               viewBox="0 0 16 16"
@@ -105,10 +99,8 @@ export const RegisterPage: React.FC = () => {
         </div>
       </header>
 
-      {/* Content */}
       <div className="register-content">
         <div className="register-card">
-          {/* Stepper â€” only show for steps 1 & 2 */}
           {currentStep !== 3 && (
             <div
               className="register-stepper"
@@ -130,7 +122,6 @@ export const RegisterPage: React.FC = () => {
             </div>
           )}
 
-          {/* Step 1 */}
           {currentStep === 1 && (
             <StepCreateAccount
               fullName={fullName}
@@ -143,7 +134,6 @@ export const RegisterPage: React.FC = () => {
             />
           )}
 
-          {/* Step 2 */}
           {currentStep === 2 && (
             <StepPassword
               email={email}
@@ -154,22 +144,20 @@ export const RegisterPage: React.FC = () => {
             />
           )}
 
-          {/* Step 3 */}
           {currentStep === 3 && (
             <StepVerifyEmail email={email} onResend={handleResendEmail} />
           )}
         </div>
       </div>
 
-      {/* Footer */}
       <footer className="register-footer">
         <div className="register-footer__links">
           <a href="/terms" target="_blank" rel="noopener noreferrer">
-            TÃ©rminos
+            Términos
           </a>
           <span className="register-footer__sep">|</span>
           <a href="/privacy" target="_blank" rel="noopener noreferrer">
-            PolÃ­tica de privacidad
+            Política de privacidad
           </a>
         </div>
       </footer>

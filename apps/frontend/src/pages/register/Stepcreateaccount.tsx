@@ -52,7 +52,6 @@ export const StepCreateAccount: React.FC<StepCreateAccountProps> = ({
       </p>
 
       <form className="step-create__form" onSubmit={handleSubmit} noValidate>
-        {/* Nombre completo */}
         <div className="reg-field">
           <label className="reg-field__label reg-field__label--required">
             Nombre completo
@@ -63,7 +62,7 @@ export const StepCreateAccount: React.FC<StepCreateAccountProps> = ({
               type="text"
               value={fullName}
               onChange={(e) => setFullName(e.target.value)}
-              placeholder="Elena Mendoza GarcÃ­a"
+              placeholder="Elena Mendoza García"
               autoComplete="name"
               autoFocus
             />
@@ -75,7 +74,6 @@ export const StepCreateAccount: React.FC<StepCreateAccountProps> = ({
           </div>
         </div>
 
-        {/* Nombre del centro */}
         <div className="reg-field">
           <label className="reg-field__label reg-field__label--required">
             Nombre del centro en el que opera
@@ -97,7 +95,6 @@ export const StepCreateAccount: React.FC<StepCreateAccountProps> = ({
           </div>
         </div>
 
-        {/* Correo corporativo */}
         <div className="reg-field">
           <label className="reg-field__label reg-field__label--required">
             Correo corporativo
@@ -108,7 +105,7 @@ export const StepCreateAccount: React.FC<StepCreateAccountProps> = ({
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="ContraseÃ±a"
+              placeholder="nombre@empresa.com"
               autoComplete="email"
             />
             {isEmailValid && (
@@ -122,16 +119,14 @@ export const StepCreateAccount: React.FC<StepCreateAccountProps> = ({
           )}
         </div>
 
-        {/* Continue button */}
         <button className="reg-btn" type="submit" disabled={!canContinue}>
           Continuar
         </button>
       </form>
 
-      {/* Login link */}
       <p className="step-create__login-link">
-        Â¿Ya tiene cuenta?
-        <Link to="/login">Accede aquÃ­</Link>
+        ¿Ya tiene cuenta?
+        <Link to="/login">Accede aquí</Link>
       </p>
     </div>
   );
