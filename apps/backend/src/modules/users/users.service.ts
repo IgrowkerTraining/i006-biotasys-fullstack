@@ -46,12 +46,18 @@ export class UsersService {
    */
   async create(createUserDto: CreateUserDto): Promise<UserResponseDto> {
     try {
+      this.logger.log(
+        `Iniciando registro para ${createUserDto.email} (laboratorio: ${createUserDto.laboratory || 'sin laboratorio'})`,
+      );
       // Verificar si el email ya existe
       const existingUser = await this.userRepository.findOne({
         where: { email: createUserDto.email },
       });
 
       if (existingUser) {
+        this.logger.warn(
+          `Registro rechazado: el correo ${createUserDto.email} ya existe`,
+        );
         throw new ConflictException(
           `El usuario con el correo ${createUserDto.email} ya existe`,
         );
@@ -62,6 +68,7 @@ export class UsersService {
         createUserDto.password,
         10,
       );
+      this.logger.log(`Password hasheada para ${createUserDto.email}`);
 
       // Crear la entidad del usuario (no verificado por defecto)
       const user = this.userRepository.create({
@@ -72,15 +79,24 @@ export class UsersService {
 
       // Guardar en la base de datos
       const savedUser = await this.userRepository.save(user);
+      this.logger.log(
+        `Usuario ${savedUser.email} guardado con id ${savedUser.id}`,
+      );
 
       // Generar token de verificación
       const verificationToken = await this.generateVerificationToken(
         savedUser.id,
       );
+      this.logger.log(
+        `Token de verificacion generado para ${savedUser.email}`,
+      );
 
       // Construir URL de verificación
       const appUrl = process.env.APP_URL || 'http://localhost:3001';
       const verificationLink = `${appUrl}/auth/verify-email?token=${verificationToken.token}`;
+      this.logger.log(
+        `Link de verificacion construido para ${savedUser.email} usando APP_URL=${appUrl}`,
+      );
 
       // Enviar email de verificación
       void this.emailService
@@ -105,18 +121,27 @@ export class UsersService {
           verificationLink,
         }),
       };
+      this.logger.log(`Registro completado para ${savedUser.email}`);
       return response;
     } catch (error) {
       if (error instanceof ConflictException) {
+        this.logger.warn(
+          `Conflicto al registrar ${createUserDto.email}: ${error.message}`,
+        );
         throw error;
       }
 
       if (error instanceof BadRequestException) {
+        this.logger.warn(
+          `Bad request al registrar ${createUserDto.email}: ${error.message}`,
+        );
         throw error;
       }
 
-      // Log para debugging
-      console.error('Error creating user:', error);
+      this.logger.error(
+        `Error inesperado al crear el usuario ${createUserDto.email}`,
+        error instanceof Error ? error.stack : String(error),
+      );
 
       throw new BadRequestException('Error al crear el usuario');
     }
