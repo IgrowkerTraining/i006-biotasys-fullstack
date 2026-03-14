@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { StepCreateAccount } from './Stepcreateaccount';
 import { StepPassword } from './Steppassword';
 import { StepVerifyEmail } from './Stepverifyemail';
@@ -14,7 +14,6 @@ export interface RegisterFormData {
 }
 
 export const RegisterPage: React.FC = () => {
-  const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState<1 | 2 | 3>(1);
   const [isLoading, setIsLoading] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
@@ -51,11 +50,11 @@ export const RegisterPage: React.FC = () => {
           laboratory: laboratory.trim() || undefined,
         });
 
-        // Registration successful → show email verification step
+        // Registration successful â†’ show email verification step
         setCurrentStep(3);
       } catch (err: any) {
         const msg =
-          err?.message || 'Ha ocurrido un error al crear tu cuenta. Inténtalo de nuevo.';
+          err?.message || 'Ha ocurrido un error al crear tu cuenta. IntÃ©ntalo de nuevo.';
         setServerError(msg);
       } finally {
         setIsLoading(false);
@@ -73,7 +72,7 @@ export const RegisterPage: React.FC = () => {
     <div className="register-page">
       {/* Header */}
       <header className="register-header">
-        <a href="/" className="register-header__logo">
+        <Link to="/login" className="register-header__logo">
           <svg
             className="register-header__logo-icon"
             viewBox="0 0 32 32"
@@ -87,14 +86,14 @@ export const RegisterPage: React.FC = () => {
             <circle cx="16" cy="24" r="2" fill="#fff" opacity="0.5" />
           </svg>
           <span className="register-header__logo-text">Biotasys</span>
-        </a>
+        </Link>
 
         <div className="register-header__right">
           <button className="register-header__help-btn" title="Ayuda" aria-label="Ayuda">
             ?
           </button>
           <button className="register-header__lang-btn" aria-label="Cambiar idioma">
-            Español
+            EspaÃ±ol
             <svg
               className="register-header__lang-chevron"
               viewBox="0 0 16 16"
@@ -109,9 +108,15 @@ export const RegisterPage: React.FC = () => {
       {/* Content */}
       <div className="register-content">
         <div className="register-card">
-          {/* Stepper — only show for steps 1 & 2 */}
+          {/* Stepper â€” only show for steps 1 & 2 */}
           {currentStep !== 3 && (
-            <div className="register-stepper" role="progressbar" aria-valuenow={currentStep} aria-valuemin={1} aria-valuemax={2}>
+            <div
+              className="register-stepper"
+              role="progressbar"
+              aria-valuenow={currentStep}
+              aria-valuemin={1}
+              aria-valuemax={2}
+            >
               <div
                 className={`register-stepper__bar ${
                   currentStep >= 1 ? 'register-stepper__bar--active' : ''
@@ -160,11 +165,11 @@ export const RegisterPage: React.FC = () => {
       <footer className="register-footer">
         <div className="register-footer__links">
           <a href="/terms" target="_blank" rel="noopener noreferrer">
-            Términos
+            TÃ©rminos
           </a>
           <span className="register-footer__sep">|</span>
           <a href="/privacy" target="_blank" rel="noopener noreferrer">
-            Política de privacidad
+            PolÃ­tica de privacidad
           </a>
         </div>
       </footer>

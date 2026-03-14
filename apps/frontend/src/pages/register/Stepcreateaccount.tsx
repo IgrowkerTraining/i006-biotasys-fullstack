@@ -1,4 +1,5 @@
 import React, { useMemo } from 'react';
+import { Link } from 'react-router-dom';
 
 interface StepCreateAccountProps {
   fullName: string;
@@ -62,7 +63,7 @@ export const StepCreateAccount: React.FC<StepCreateAccountProps> = ({
               type="text"
               value={fullName}
               onChange={(e) => setFullName(e.target.value)}
-              placeholder="Elena Mendoza García"
+              placeholder="Elena Mendoza GarcÃ­a"
               autoComplete="name"
               autoFocus
             />
@@ -107,7 +108,7 @@ export const StepCreateAccount: React.FC<StepCreateAccountProps> = ({
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="Contraseña"
+              placeholder="ContraseÃ±a"
               autoComplete="email"
             />
             {isEmailValid && (
@@ -129,8 +130,8 @@ export const StepCreateAccount: React.FC<StepCreateAccountProps> = ({
 
       {/* Login link */}
       <p className="step-create__login-link">
-        ¿Ya tiene cuenta?
-        <a href="#/login">Accede aquí</a>
+        Â¿Ya tiene cuenta?
+        <Link to="/login">Accede aquÃ­</Link>
       </p>
     </div>
   );
